@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:restrospt/foodmenu.dart';
+import 'package:restrospt/restaurants.dart';
 
 class DashboardScreen extends StatelessWidget {
   final Color primary = Color(0xFFEB5E44);
@@ -163,13 +165,19 @@ class DashboardScreen extends StatelessWidget {
     return Row(
       children: [
         _optionCard(context, Icons.menu_book, 'Food Menu', () {
-          // Navigator.push(context, MaterialPageRoute(builder: (_) => FoodMenuScreen()));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => FoodMenu()),
+          );
         }),
         SizedBox(width: 12),
         Container(height: 100, width: 1, color: Colors.black12),
         SizedBox(width: 12),
         _optionCard(context, Icons.restaurant, 'Restaurants', () {
-          // Navigator.push(context, MaterialPageRoute(builder: (_) => RestaurantScreen()));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => RestaurantsScreen()),
+          );
         }),
       ],
     );

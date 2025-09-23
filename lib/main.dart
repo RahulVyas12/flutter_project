@@ -62,7 +62,6 @@ class SplashContent extends StatelessWidget {
       children: [
         // Logo image
         Image.asset('assets/logo.png', width: 250, height: 250),
-        const SizedBox(height: 20),
       ],
     );
   }
