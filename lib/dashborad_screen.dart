@@ -68,7 +68,7 @@ class DashboardScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Arsh Pathan',
+                  'Mohin Pathan',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
