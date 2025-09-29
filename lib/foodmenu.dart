@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restrospt/food_item.dart'; // <-- Add this import
 
 class FoodMenu extends StatefulWidget {
   const FoodMenu({super.key});
@@ -137,48 +138,57 @@ class _FoodMenuState extends State<FoodMenu> {
       ),
       itemBuilder: (context, index) {
         final item = items[index];
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 6,
-                spreadRadius: 2,
-                offset: const Offset(2, 3),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ClipOval(
-                child: Image.asset(
-                  item["image"]!,
-                  height: 80,
-                  width: 80,
-                  fit: BoxFit.cover,
+        return InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FoodDetailPage()),
+            );
+          },
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 6,
+                  spreadRadius: 2,
+                  offset: const Offset(2, 3),
                 ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                item["name"]!,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ClipOval(
+                  child: Image.asset(
+                    item["image"]!,
+                    height: 80,
+                    width: 80,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                item["price"]!,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.deepOrange,
+                const SizedBox(height: 10),
+                Text(
+                  item["name"]!,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 6),
+                Text(
+                  item["price"]!,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.deepOrange,
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
