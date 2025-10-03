@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(
-    const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: FoodDetailPage(),
-    ),
-  );
-}
-
 class FoodDetailPage extends StatelessWidget {
-  const FoodDetailPage({super.key});
+  final String image;
+  final String name;
+  final String description;
+  final String price;
+
+  const FoodDetailPage({
+    super.key,
+    required this.image,
+    required this.name,
+    required this.description,
+    required this.price,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class FoodDetailPage extends StatelessWidget {
               Center(
                 child: ClipOval(
                   child: Image.asset(
-                    "assets/samosa.jpg",
+                    image,
                     width: 180,
                     height: 180,
                     fit: BoxFit.cover,
@@ -62,19 +64,22 @@ class FoodDetailPage extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Food name and description
-              const Text(
-                "Samosa",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              Text(
+                name,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                "Crispy and savory pastry filled with spicy potatoes.\nPrice: ₹25",
-                style: TextStyle(fontSize: 15, color: Colors.black87),
+              Text(
+                description,
+                style: const TextStyle(fontSize: 15, color: Colors.black87),
               ),
               const SizedBox(height: 8),
-              const Text(
-                "₹ 25",
-                style: TextStyle(
+              Text(
+                price,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.blue,

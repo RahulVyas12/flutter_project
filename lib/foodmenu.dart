@@ -67,11 +67,15 @@ class _FoodMenuState extends State<FoodMenu> {
               {
                 "name": "Samosa",
                 "price": "₹50",
+                "description":
+                    "A popular Indian snack made of a crispy pastry filled with spiced potatoes and peas.",
                 "image": "assets/paneer-butter-masala.jpg",
               },
               {
                 "name": "Paneer Tikka",
                 "price": "₹199",
+                "description":
+                    "Chunks of paneer marinated in spices and grilled to perfection.",
                 "image": "assets/paneer-butter-masala.jpg",
               },
             ]),
@@ -83,11 +87,15 @@ class _FoodMenuState extends State<FoodMenu> {
               {
                 "name": "Dal Makhni",
                 "price": "₹149",
+                "description":
+                    "A rich and creamy lentil dish made with black lentils and kidney beans, cooked with butter and cream.",
                 "image": "assets/paneer-butter-masala.jpg",
               },
               {
                 "name": "Paneer Butter Masala",
                 "price": "₹229",
+                "description":
+                    "A popular North Indian dish made with paneer cubes cooked in a rich and creamy tomato-based gravy.",
                 "image": "assets/paneer-butter-masala.jpg",
               },
             ]),
@@ -99,11 +107,15 @@ class _FoodMenuState extends State<FoodMenu> {
               {
                 "name": "Hakka Noodles",
                 "price": "₹129",
+                "description":
+                    "A popular Indo-Chinese dish made with stir-fried noodles and vegetables.",
                 "image": "assets/paneer-butter-masala.jpg",
               },
               {
                 "name": "Manchurian",
                 "price": "₹149",
+                "description":
+                    "A popular Indo-Chinese dish made with fried vegetable or chicken balls in a spicy sauce.",
                 "image": "assets/paneer-butter-masala.jpg",
               },
             ]),
@@ -142,7 +154,14 @@ class _FoodMenuState extends State<FoodMenu> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const FoodDetailPage()),
+              MaterialPageRoute(
+                builder: (context) => FoodDetailPage(
+                  image: item["image"]!,
+                  name: item["name"]!,
+                  description: item["description"]!,
+                  price: item["price"]!,
+                ),
+              ),
             );
           },
           borderRadius: BorderRadius.circular(16),
