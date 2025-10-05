@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:restrospt/CartPage.dart';
+
+List<Map<String, dynamic>> cartItems = [];
 
 class FoodDetailPage extends StatelessWidget {
   final String image;
@@ -36,9 +39,17 @@ class FoodDetailPage extends StatelessWidget {
                   ),
                   Row(
                     children: [
+                      //cart and favorite icons
                       IconButton(
                         icon: const Icon(Icons.shopping_cart_outlined),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const CartPage(),
+                            ),
+                          );
+                        },
                       ),
                       IconButton(
                         icon: const Icon(Icons.favorite_border),
@@ -102,7 +113,36 @@ class FoodDetailPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      final existingItem = cartItems.firstWhere(
+                        (item) => item['name'] == name,
+                        orElse: () => {},
+                      );
+
+                      if (existingItem.isNotEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('$name is already in your cart!'),
+                            backgroundColor: Colors.orange,
+                          ),
+                        );
+                      } else {
+                        cartItems.add({
+                          'image': image,
+                          'name': name,
+                          'description': description,
+                          'price': price,
+                          'quantity': 1,
+                        });
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('$name added to your cart!'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      }
+                    },
                     child: const Text(
                       "Add to cart",
                       style: TextStyle(fontSize: 16, color: Colors.white),

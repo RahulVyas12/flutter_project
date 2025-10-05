@@ -123,8 +123,8 @@ class RestaurantsScreen extends StatelessWidget {
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(12),
                 ),
-                child: Image.network(
-                  "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
+                child: Image.asset(
+                  "assets/restaurant.jpg",
                   height: 100,
                   width: double.infinity,
                   fit: BoxFit.cover,
