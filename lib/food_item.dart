@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restrospt/CartPage.dart';
+import 'package:restrospt/WishlistPage.dart';
 
 List<Map<String, dynamic>> cartItems = [];
 
@@ -16,6 +17,8 @@ class FoodDetailPage extends StatelessWidget {
     required this.description,
     required this.price,
   });
+
+  static final List<Map<String, dynamic>> wishlistItems = [];
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +56,14 @@ class FoodDetailPage extends StatelessWidget {
                       ),
                       IconButton(
                         icon: const Icon(Icons.favorite_border),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const WishlistPage(),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -97,7 +107,51 @@ class FoodDetailPage extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.deepOrange,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        side: const BorderSide(color: Colors.deepOrange),
+                      ),
+                    ),
+                    icon: const Icon(Icons.favorite_border_outlined),
+                    label: const Text("Add to Wishlist"),
+                    onPressed: () {
+                      final exists = wishlistItems.any(
+                        (item) => item['name'] == name,
+                      );
+                      if (exists) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Already in wishlist!'),
+                            backgroundColor: Colors.orange,
+                          ),
+                        );
+                      } else {
+                        wishlistItems.add({
+                          'image': image,
+                          'name': name,
+                          'description': description,
+                          'price': price,
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Added to wishlist!'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
               // Buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

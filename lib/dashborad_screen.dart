@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:restrospt/CartPage.dart';
+import 'package:restrospt/WishlistPage.dart';
 import 'package:restrospt/foodmenu.dart';
 import 'package:restrospt/restaurants.dart';
 
@@ -46,7 +48,7 @@ class DashboardScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNav(primary),
+      bottomNavigationBar: _buildBottomNav(context, primary),
     );
   }
 
@@ -356,7 +358,7 @@ class DashboardScreen extends StatelessWidget {
   }
 
   // Bottom Navigation
-  Widget _buildBottomNav(Color primary) {
+  Widget _buildBottomNav(BuildContext context, Color primary) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
       decoration: BoxDecoration(
@@ -366,10 +368,34 @@ class DashboardScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _navItem(Icons.home, primary, true),
-          _navItem(Icons.shopping_cart, primary, false),
-          _navItem(Icons.favorite, primary, false),
-          _navItem(Icons.restaurant_menu, primary, false),
+          GestureDetector(
+            onTap: () {},
+            child: _navItem(Icons.home, primary, true),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CartPage()),
+              );
+            },
+            child: _navItem(Icons.shopping_cart, primary, false),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const WishlistPage()),
+              );
+            },
+            child: _navItem(Icons.favorite, primary, false),
+          ),
+          GestureDetector(
+            onTap: () {
+              // Restaurant menu: You can navigate to restaurant menu page here
+            },
+            child: _navItem(Icons.restaurant_menu, primary, false),
+          ),
         ],
       ),
     );
