@@ -1,11 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:restrospt/CartPage.dart';
 import 'package:restrospt/WishlistPage.dart';
+import 'package:restrospt/food_item.dart'; // Add this import at the top
 import 'package:restrospt/foodmenu.dart';
 import 'package:restrospt/restaurants.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
   final Color primary = Color(0xFFEB5E44);
+
+  final TextEditingController _searchController = TextEditingController();
+  String searchQuery = '';
+
+  final List<Map<String, String>> foodItems = [
+    {
+      'image': 'assets/paneer-butter-masala.jpg',
+      'name': 'Paneer Butter Masala',
+      'description':
+          'Soft cubes of paneer cooked in a rich, creamy tomato-based gravy with butter and mild spices.',
+      'price': '280',
+    },
+    {
+      'image': 'assets/paneer-butter-masala.jpg',
+      'name': 'Dal Makhani',
+      'description':
+          'A creamy, slow-cooked black lentil dish made with butter, cream, and aromatic spices.',
+      'price': '220',
+    },
+  ];
+
+  List<Map<String, String>> get filteredItems {
+    if (searchQuery.isEmpty) return foodItems;
+    return foodItems
+        .where(
+          (item) =>
+              item['name']!.toLowerCase().contains(searchQuery.toLowerCase()) ||
+              item['description']!.toLowerCase().contains(
+                searchQuery.toLowerCase(),
+              ),
+        )
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +75,8 @@ class DashboardScreen extends StatelessWidget {
                     SizedBox(height: 12),
                     Column(
                       children: List.generate(
-                        2,
-                        (i) => _foodCard(context, i == 0),
+                        filteredItems.length,
+                        (i) => _foodCard(context, filteredItems[i]),
                       ),
                     ),
                     SizedBox(height: 80),
@@ -127,11 +166,17 @@ class DashboardScreen extends StatelessWidget {
                 SizedBox(width: 8),
                 Expanded(
                   child: TextField(
+                    controller: _searchController,
                     decoration: InputDecoration(
                       hintText: 'Search here',
                       border: InputBorder.none,
                       isDense: true,
                     ),
+                    onChanged: (value) {
+                      setState(() {
+                        searchQuery = value;
+                      });
+                    },
                   ),
                 ),
               ],
@@ -232,10 +277,12 @@ class DashboardScreen extends StatelessWidget {
   }
 
   // Food Cards
-  Widget _foodCard(BuildContext context, bool first) {
-    final image = first
-        ? 'assets/paneer-butter-masala.jpg'
-        : 'assets/paneer-butter-masala.jpg';
+  Widget _foodCard(BuildContext context, Map<String, String> item) {
+    // Check if item is in wishlist or cart
+    final isInWishlist = FoodDetailPage.wishlistItems.any(
+      (wish) => wish['name'] == item['name'],
+    );
+    final isInCart = cartItems.any((cart) => cart['name'] == item['name']);
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
@@ -259,7 +306,7 @@ class DashboardScreen extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.asset(
-                    image,
+                    item['image']!,
                     height: 90,
                     width: 90,
                     fit: BoxFit.cover,
@@ -275,29 +322,67 @@ class DashboardScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              first ? 'Paneer Butter Masala' : 'Dal Makhani',
+                              item['name']!,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
-                          Icon(Icons.favorite_border, color: Colors.black54),
+                          IconButton(
+                            icon: Icon(
+                              isInWishlist
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: isInWishlist
+                                  ? Colors.deepOrange
+                                  : Colors.black54,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                if (isInWishlist) {
+                                  FoodDetailPage.wishlistItems.removeWhere(
+                                    (wish) => wish['name'] == item['name'],
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        '${item['name']} removed from favorites!',
+                                      ),
+                                      backgroundColor: Colors.redAccent,
+                                    ),
+                                  );
+                                } else {
+                                  FoodDetailPage.wishlistItems.add({
+                                    'image': item['image'],
+                                    'name': item['name'],
+                                    'description': item['description'],
+                                    'price': item['price'],
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        '${item['name']} added to favorites!',
+                                      ),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+                                }
+                              });
+                            },
+                          ),
                         ],
                       ),
                       SizedBox(height: 6),
                       Text(
-                        'Description: ' +
-                            (first
-                                ? 'Soft cubes of paneer cooked in a rich, creamy tomato-based gravy with butter and mild spices.'
-                                : 'A creamy, slow-cooked black lentil dish made with butter, cream, and aromatic spices.'),
+                        'Description: ${item['description']}',
                         style: TextStyle(fontSize: 12, color: Colors.black54),
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 8),
                       Text(
-                        'Price: ₹' + (first ? '280' : '220'),
+                        'Price: ₹${item['price']}',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -307,7 +392,47 @@ class DashboardScreen extends StatelessWidget {
                       SizedBox(height: 6),
                       Row(
                         children: [
-                          Icon(Icons.shopping_cart_outlined, size: 20),
+                          IconButton(
+                            icon: Icon(
+                              Icons.shopping_cart_outlined,
+                              color: isInCart
+                                  ? Colors.deepOrange
+                                  : Colors.black54,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                if (isInCart) {
+                                  cartItems.removeWhere(
+                                    (cart) => cart['name'] == item['name'],
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        '${item['name']} removed from cart!',
+                                      ),
+                                      backgroundColor: Colors.redAccent,
+                                    ),
+                                  );
+                                } else {
+                                  cartItems.add({
+                                    'image': item['image'],
+                                    'name': item['name'],
+                                    'description': item['description'],
+                                    'price': item['price'],
+                                    'quantity': 1,
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        '${item['name']} added to cart!',
+                                      ),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+                                }
+                              });
+                            },
+                          ),
                           Spacer(),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -321,7 +446,9 @@ class DashboardScreen extends StatelessWidget {
                               ),
                               elevation: 0,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              // You can implement order functionality here
+                            },
                             child: Text(
                               'Order',
                               style: TextStyle(color: Colors.white),
@@ -333,23 +460,6 @@ class DashboardScreen extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-          ),
-          Positioned(
-            right: 12,
-            top: 8,
-            child: Container(
-              padding: EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
-              ),
-              child: Icon(
-                Icons.favorite,
-                color: first ? Colors.black54 : Color(0xFFEB5E44),
-                size: 18,
-              ),
             ),
           ),
         ],
