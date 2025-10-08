@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:restrospt/loginpage.dart';
 import 'package:restrospt/past_orders_page.dart';
 
@@ -11,6 +13,8 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final Color primary = Colors.deepOrange;
+  final ImagePicker _picker = ImagePicker();
+  File? _profileImage;
 
   // User data
   String userName = "Arsh Pathan";
@@ -61,27 +65,35 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: CircleAvatar(
                           radius: 56,
                           backgroundColor: Colors.grey.shade200,
-                          child: Icon(
-                            Icons.person,
-                            size: 60,
-                            color: Colors.grey.shade400,
-                          ),
+                          backgroundImage: _profileImage != null
+                              ? FileImage(_profileImage!)
+                              : null,
+                          child: _profileImage == null
+                              ? Icon(
+                                  Icons.person,
+                                  size: 60,
+                                  color: Colors.grey.shade400,
+                                )
+                              : null,
                         ),
                       ),
                       Positioned(
                         bottom: 0,
                         right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: primary, width: 2),
-                          ),
-                          child: Icon(
-                            Icons.camera_alt,
-                            size: 20,
-                            color: primary,
+                        child: GestureDetector(
+                          onTap: _showImageSourceDialog,
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: primary, width: 2),
+                            ),
+                            child: Icon(
+                              Icons.camera_alt,
+                              size: 20,
+                              color: primary,
+                            ),
                           ),
                         ),
                       ),
@@ -621,6 +633,100 @@ class _ProfilePageState extends State<ProfilePage> {
             child: const Text('Logout', style: TextStyle(color: Colors.white)),
           ),
         ],
+      ),
+    );
+  }
+
+  // Show dialog to choose image source
+  void _showImageSourceDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Icon(Icons.photo_camera, color: primary),
+            const SizedBox(width: 8),
+            const Text(
+              'Change Profile Photo',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(Icons.camera_alt, color: primary),
+              title: const Text('Take Photo'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.photo_library, color: primary),
+              title: const Text('Choose from Gallery'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+            if (_profileImage != null)
+              ListTile(
+                leading: const Icon(Icons.delete, color: Colors.red),
+                title: const Text('Remove Photo'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _removeProfileImage();
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Pick image from camera or gallery
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: source,
+        maxWidth: 512,
+        maxHeight: 512,
+        imageQuality: 75,
+      );
+
+      if (pickedFile != null) {
+        setState(() {
+          _profileImage = File(pickedFile.path);
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Profile photo updated successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error picking image: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  // Remove profile image
+  void _removeProfileImage() {
+    setState(() {
+      _profileImage = null;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Profile photo removed'),
+        backgroundColor: Colors.orange,
       ),
     );
   }

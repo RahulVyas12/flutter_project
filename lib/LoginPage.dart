@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:restrospt/Forgotpassword.dart';
 import 'package:restrospt/dashborad_screen.dart';
+import 'package:restrospt/admin/admin_login.dart';
 
 import 'SignupPage.dart';
 
@@ -176,6 +177,31 @@ class _LoginPageState extends State<LoginPage> {
                     child: const Text(
                       "Login",
                       style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Admin Login Link
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AdminLoginPage(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Admin Login',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.deepOrange,
+                        decoration: TextDecoration.underline,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
