@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:restrospt/booking_manager.dart';
 import 'package:restrospt/dashborad_screen.dart';
+import 'package:restrospt/my_bookings.dart';
 
 class TableReservationScreen extends StatefulWidget {
   final String restaurantName;
@@ -20,6 +22,7 @@ class TableReservationScreen extends StatefulWidget {
 }
 
 class _TableReservationScreenState extends State<TableReservationScreen> {
+  final BookingManager _bookingManager = BookingManager();
   DateTime _selectedDate = DateTime.now();
   int? _selectedTable; // 1..10
   String? _selectedTime; // e.g. '9:30 pm'
@@ -37,19 +40,10 @@ class _TableReservationScreenState extends State<TableReservationScreen> {
     '10 pm',
   ];
 
-  // Mock: compute booked tables for a given date/time
+  // Get booked tables for a given date/time from booking manager
   Set<int> _bookedTablesFor(DateTime date, String? time) {
-    // Simple deterministic mock so UI shows reds. Use day and hour hash.
-    final dayKey = date.year * 10000 + date.month * 100 + date.day;
-    final timeKey = (time ?? '').hashCode;
-    final seed = (dayKey + timeKey).abs();
-    final booked = <int>{};
-    // Mark 2-3 tables as booked based on seed, always within 1..10
-    if (_timeSlots.isNotEmpty) {
-      booked.add((seed % 10) + 1);
-      booked.add(((seed ~/ 3) % 10) + 1);
-    }
-    return booked;
+    if (time == null || time.isEmpty) return {};
+    return _bookingManager.getBookedTables(date, time);
   }
 
   Future<void> _pickDate() async {
@@ -225,18 +219,36 @@ class _TableReservationScreenState extends State<TableReservationScreen> {
                   ),
                   onPressed: _canReserve(booked)
                       ? () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => DashboardScreen(),
-                            ),
+                          // Save booking
+                          final newBooking = BookingModel(
+                            id: DateTime.now().millisecondsSinceEpoch
+                                .toString(),
+                            restaurantName: widget.restaurantName,
+                            imagePath: widget.imagePath,
+                            date: _selectedDate,
+                            tableNo: _selectedTable!,
+                            time: _selectedTime!,
+                            rating: widget.rating,
+                            hours: widget.hours,
                           );
+                          _bookingManager.addBooking(newBooking);
+
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
                                 'Reserved table ${_selectedTable!} at ${_selectedTime!} on ${_formatDate(_selectedDate)}',
                               ),
+                              backgroundColor: Colors.green,
                             ),
+                          );
+
+                          // Navigate back to dashboard
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => DashboardScreen(),
+                            ),
+                            (route) => false,
                           );
                         }
                       : null,

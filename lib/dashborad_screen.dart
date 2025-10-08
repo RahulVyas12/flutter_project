@@ -5,6 +5,7 @@ import 'package:restrospt/WishlistPage.dart';
 import 'package:restrospt/food_item.dart'; // Add this import at the top
 import 'package:restrospt/foodmenu.dart';
 import 'package:restrospt/restaurants.dart';
+import 'package:restrospt/my_bookings.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -527,7 +528,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           GestureDetector(
             onTap: () {
-              // Restaurant menu: You can navigate to restaurant menu page here
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const MyBookingsScreen()),
+              );
             },
             child: _navItem(Icons.restaurant_menu, primary, false),
           ),
