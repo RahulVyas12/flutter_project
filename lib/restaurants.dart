@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'table_reservation.dart';
 
 class RestaurantsScreen extends StatelessWidget {
   const RestaurantsScreen({super.key});
@@ -90,7 +91,7 @@ class RestaurantsScreen extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemCount: 2,
             itemBuilder: (context, index) {
-              return _buildRestaurantCard();
+              return _buildRestaurantCard(context);
             },
           ),
         ),
@@ -99,88 +100,103 @@ class RestaurantsScreen extends StatelessWidget {
   }
 
   // Reusable restaurant card
-  Widget _buildRestaurantCard() {
-    return Container(
-      width: 220,
-      margin: const EdgeInsets.only(right: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+  Widget _buildRestaurantCard(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const TableReservationScreen(
+              restaurantName: 'Golden Spot Restorant',
+              imagePath: 'assets/restaurant.jpg',
+              rating: 4.4,
+              hours: '8 am to 10 pm',
+            ),
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(12),
-                ),
-                child: Image.asset(
-                  "assets/restaurant.jpg",
-                  height: 100,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Positioned(
-                right: 8,
-                top: 8,
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
+        );
+      },
+      child: Container(
+        width: 220,
+        margin: const EdgeInsets.only(right: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(12),
                   ),
-                  padding: const EdgeInsets.all(4),
+                  child: Image.asset(
+                    "assets/restaurant.jpg",
+                    height: 100,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-            ],
-          ),
-
-          // Info
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  "Golden Spot Restorant",
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-                SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      "Review : ",
-                      style: TextStyle(fontSize: 13, color: Colors.grey),
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
                     ),
-                    Text(
-                      "4.4 ",
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Icon(Icons.star, color: Colors.amber, size: 16),
-                  ],
-                ),
-                SizedBox(height: 4),
-                Text(
-                  "Open : 8 am to 10 pm",
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                    padding: const EdgeInsets.all(4),
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
+
+            // Info
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    "Golden Spot Restorant",
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Text(
+                        "Review : ",
+                        style: TextStyle(fontSize: 13, color: Colors.grey),
+                      ),
+                      Text(
+                        "4.4 ",
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Icon(Icons.star, color: Colors.amber, size: 16),
+                    ],
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    "Open : 8 am to 10 pm",
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
