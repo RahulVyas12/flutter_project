@@ -4,8 +4,8 @@ import 'package:restrospt/DeliveryPage.dart';
 import 'package:restrospt/WishlistPage.dart';
 import 'package:restrospt/food_item.dart'; // Add this import at the top
 import 'package:restrospt/foodmenu.dart';
-import 'package:restrospt/restaurants.dart';
 import 'package:restrospt/my_bookings.dart';
+import 'package:restrospt/restaurants.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -18,20 +18,77 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final TextEditingController _searchController = TextEditingController();
   String searchQuery = '';
 
+  // Filter variables
+  String selectedCategory = 'All';
+  String selectedPriceRange = 'All';
+  double minRating = 0.0;
+
+  final List<String> categories = ['All', 'Starters', 'Vegetarian', 'Chinese'];
+  final List<String> priceRanges = [
+    'All',
+    'Under ₹100',
+    '₹100-₹200',
+    '₹200-₹300',
+    'Above ₹300',
+  ];
+
   final List<Map<String, String>> foodItems = [
+    // Starters
+    {
+      'image': 'assets/paneer-butter-masala.jpg',
+      'name': 'Samosa',
+      'description':
+          'A popular Indian snack made of a crispy pastry filled with spiced potatoes and peas.',
+      'price': '₹50',
+      'category': 'Starters',
+      'rating': '4.0',
+    },
+    {
+      'image': 'assets/paneer-butter-masala.jpg',
+      'name': 'Paneer Tikka',
+      'description':
+          'Chunks of paneer marinated in spices and grilled to perfection.',
+      'price': '₹199',
+      'category': 'Starters',
+      'rating': '4.5',
+    },
+    // Main Course
+    {
+      'image': 'assets/paneer-butter-masala.jpg',
+      'name': 'Dal Makhni',
+      'description':
+          'A rich and creamy lentil dish made with black lentils and kidney beans, cooked with butter and cream.',
+      'price': '₹149',
+      'category': 'Vegetarian',
+      'rating': '4.3',
+    },
     {
       'image': 'assets/paneer-butter-masala.jpg',
       'name': 'Paneer Butter Masala',
       'description':
-          'Soft cubes of paneer cooked in a rich, creamy tomato-based gravy with butter and mild spices.',
-      'price': '280',
+          'A popular North Indian dish made with paneer cubes cooked in a rich and creamy tomato-based gravy.',
+      'price': '₹229',
+      'category': 'Vegetarian',
+      'rating': '4.7',
+    },
+    // Chinese
+    {
+      'image': 'assets/paneer-butter-masala.jpg',
+      'name': 'Hakka Noodles',
+      'description':
+          'A popular Indo-Chinese dish made with stir-fried noodles and vegetables.',
+      'price': '₹129',
+      'category': 'Chinese',
+      'rating': '4.2',
     },
     {
       'image': 'assets/paneer-butter-masala.jpg',
-      'name': 'Dal Makhani',
+      'name': 'Manchurian',
       'description':
-          'A creamy, slow-cooked black lentil dish made with butter, cream, and aromatic spices.',
-      'price': '220',
+          'A popular Indo-Chinese dish made with fried vegetable or chicken balls in a spicy sauce.',
+      'price': '₹149',
+      'category': 'Chinese',
+      'rating': '4.4',
     },
   ];
 
@@ -46,16 +103,239 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   List<Map<String, String>> get filteredItems {
-    if (searchQuery.isEmpty) return foodItems;
-    return foodItems
-        .where(
-          (item) =>
-              item['name']!.toLowerCase().contains(searchQuery.toLowerCase()) ||
-              item['description']!.toLowerCase().contains(
-                searchQuery.toLowerCase(),
+    var items = List<Map<String, String>>.from(foodItems);
+
+    // Filter by category
+    if (selectedCategory != 'All') {
+      items = items.where((item) {
+        final category = item['category'];
+        return category != null && category == selectedCategory;
+      }).toList();
+    }
+
+    // Filter by price range
+    if (selectedPriceRange != 'All') {
+      items = items.where((item) {
+        final priceStr = item['price'] ?? '0';
+        // Remove ₹ symbol and any other non-numeric characters
+        final cleanPrice = priceStr.replaceAll(RegExp(r'[^0-9.]'), '');
+        final price = double.tryParse(cleanPrice) ?? 0;
+        switch (selectedPriceRange) {
+          case 'Under ₹100':
+            return price < 100;
+          case '₹100-₹200':
+            return price >= 100 && price <= 200;
+          case '₹200-₹300':
+            return price >= 200 && price <= 300;
+          case 'Above ₹300':
+            return price > 300;
+          default:
+            return true;
+        }
+      }).toList();
+    }
+
+    // Filter by rating
+    if (minRating > 0) {
+      items = items.where((item) {
+        final ratingStr = item['rating'];
+        if (ratingStr == null) return true; // Show items without ratings
+        final rating = double.tryParse(ratingStr) ?? 0;
+        return rating >= minRating;
+      }).toList();
+    }
+
+    // Filter by search query
+    if (searchQuery.isNotEmpty) {
+      items = items
+          .where(
+            (item) =>
+                item['name']!.toLowerCase().contains(
+                  searchQuery.toLowerCase(),
+                ) ||
+                item['description']!.toLowerCase().contains(
+                  searchQuery.toLowerCase(),
+                ),
+          )
+          .toList();
+    }
+
+    return items;
+  }
+
+  void _showFilterDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Row(
+            children: [
+              Icon(Icons.filter_list, color: primary, size: 24),
+              const SizedBox(width: 8),
+              const Text(
+                'Filter Options',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
               ),
-        )
-        .toList();
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Category Filter
+                const Text(
+                  'Category',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: categories.map<Widget>((category) {
+                    final isSelected = selectedCategory == category;
+                    return FilterChip(
+                      label: Text(category),
+                      selected: isSelected,
+                      onSelected: (selected) {
+                        setDialogState(() {
+                          selectedCategory = category;
+                        });
+                      },
+                      selectedColor: primary.withOpacity(0.2),
+                      checkmarkColor: primary,
+                      labelStyle: TextStyle(
+                        color: isSelected ? primary : Colors.black87,
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.w500,
+                      ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 20),
+
+                // Price Range Filter
+                const Text(
+                  'Price Range',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 8),
+                ...priceRanges.map<Widget>((range) {
+                  final isSelected = selectedPriceRange == range;
+                  return RadioListTile<String>(
+                    title: Text(
+                      range,
+                      style: TextStyle(
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.w500,
+                      ),
+                    ),
+                    value: range,
+                    groupValue: selectedPriceRange,
+                    activeColor: primary,
+                    onChanged: (value) {
+                      setDialogState(() {
+                        selectedPriceRange = value!;
+                      });
+                    },
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  );
+                }).toList(),
+                const SizedBox(height: 20),
+
+                // Rating Filter
+                const Text(
+                  'Minimum Rating',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: List.generate(5, (index) {
+                    final rating = (index + 1).toDouble();
+                    final isSelected = minRating >= rating;
+                    return Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          setDialogState(() {
+                            minRating = minRating == rating ? 0 : rating;
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            Icon(
+                              isSelected ? Icons.star : Icons.star_border,
+                              color: isSelected ? Colors.amber : Colors.grey,
+                              size: 32,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${rating.toInt()}+',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
+                                color: isSelected ? primary : Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  selectedCategory = 'All';
+                  selectedPriceRange = 'All';
+                  minRating = 0.0;
+                });
+                Navigator.pop(context);
+              },
+              child: const Text(
+                'Clear All',
+                style: TextStyle(color: Colors.grey),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              onPressed: () {
+                setState(() {
+                  // Apply filters
+                });
+                Navigator.pop(context);
+              },
+              child: const Text(
+                'Apply Filters',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  bool get hasActiveFilters {
+    return selectedCategory != 'All' ||
+        selectedPriceRange != 'All' ||
+        minRating > 0;
   }
 
   @override
@@ -210,9 +490,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ],
           ),
-          child: IconButton(
-            icon: Icon(Icons.filter_list, color: primary),
-            onPressed: () {},
+          child: Stack(
+            children: [
+              IconButton(
+                icon: Icon(Icons.filter_list, color: primary),
+                onPressed: _showFilterDialog,
+              ),
+              if (hasActiveFilters)
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
       ],
@@ -394,7 +691,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        'Price: ₹${item['price']}',
+                        'Price: ${item['price']}',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,

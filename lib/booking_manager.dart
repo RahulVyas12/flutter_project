@@ -8,7 +8,18 @@ class BookingManager {
   BookingManager._internal();
 
   final List<BookingModel> _bookings = [
-    // Sample bookings - using future dates
+    // Past booking - user can rate this
+    BookingModel(
+      id: '0',
+      restaurantName: 'Golden Spot Restorant',
+      imagePath: 'assets/restaurant.jpg',
+      date: DateTime(2025, 10, 1),
+      tableNo: 5,
+      time: '8 pm',
+      rating: 4.4,
+      hours: '8 am to 10 pm',
+    ),
+    // Future bookings
     BookingModel(
       id: '1',
       restaurantName: 'Golden Spot Restorant',

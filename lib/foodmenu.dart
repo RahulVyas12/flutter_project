@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:restrospt/food_item.dart'; // <-- Add this import
+import 'package:restrospt/food_item.dart';
 
 class FoodMenu extends StatefulWidget {
   const FoodMenu({super.key});

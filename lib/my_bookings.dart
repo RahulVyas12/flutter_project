@@ -11,6 +11,130 @@ class MyBookingsScreen extends StatefulWidget {
 class _MyBookingsScreenState extends State<MyBookingsScreen> {
   final BookingManager _bookingManager = BookingManager();
 
+  void _showRatingDialog(BookingModel booking) {
+    double tempRating = booking.userRating ?? 0;
+    final reviewController = TextEditingController(
+      text: booking.userReview ?? '',
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: Text(
+            'Rate ${booking.restaurantName}',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'How was your experience?',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Star rating
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(5, (index) {
+                    return IconButton(
+                      icon: Icon(
+                        index < tempRating ? Icons.star : Icons.star_border,
+                        color: Colors.amber,
+                        size: 36,
+                      ),
+                      onPressed: () {
+                        setDialogState(() {
+                          tempRating = (index + 1).toDouble();
+                        });
+                      },
+                    );
+                  }),
+                ),
+                if (tempRating > 0)
+                  Center(
+                    child: Text(
+                      '${tempRating.toStringAsFixed(1)} out of 5',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                  ),
+                const SizedBox(height: 16),
+                // Review text field
+                TextField(
+                  controller: reviewController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    hintText: 'Write your review (optional)',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Colors.deepOrange,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.grey),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepOrange,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              onPressed: tempRating > 0
+                  ? () {
+                      setState(() {
+                        booking.userRating = tempRating;
+                        booking.userReview = reviewController.text.trim();
+                      });
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Thank you for rating ${booking.restaurantName}!',
+                          ),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    }
+                  : null,
+              child: const Text(
+                'Submit Rating',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _cancelBooking(String bookingId) {
     showDialog(
       context: context,
@@ -120,7 +244,10 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
   }
 
   Widget _buildBookingCard(BookingModel booking, Color primary) {
-    final isPast = booking.date.isBefore(DateTime.now());
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final bookingDate = DateTime(booking.date.year, booking.date.month, booking.date.day);
+    final isPast = bookingDate.isBefore(today);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -278,6 +405,47 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                       ),
                     ),
                   ),
+
+                // Rate button (only for past bookings)
+                if (isPast)
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: booking.userRating != null
+                            ? Colors.green.shade400
+                            : primary,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 0,
+                      ),
+                      onPressed: () => _showRatingDialog(booking),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            booking.userRating != null
+                                ? Icons.star
+                                : Icons.star_border,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            booking.userRating != null
+                                ? 'You rated ${booking.userRating!.toStringAsFixed(1)} ⭐'
+                                : 'Rate Your Experience',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -346,8 +514,10 @@ class BookingModel {
   final DateTime date;
   final int tableNo;
   final String time;
-  final double rating;
+  final double rating; // Restaurant's overall rating
   final String hours;
+  double? userRating; // User's rating for this visit
+  String? userReview; // User's review text
 
   BookingModel({
     required this.id,
@@ -358,5 +528,7 @@ class BookingModel {
     required this.time,
     required this.rating,
     required this.hours,
+    this.userRating,
+    this.userReview,
   });
 }

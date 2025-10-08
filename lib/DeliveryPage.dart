@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'PaymentPage.dart';
 
 class DeliveryPage extends StatefulWidget {
@@ -14,7 +13,6 @@ class _DeliveryPageState extends State<DeliveryPage> {
   String deliveryMethod = "Door delivery";
   bool isEditing = false;
 
-  // Controllers for address fields
   final TextEditingController nameController = TextEditingController(
     text: "Arsh Pathan",
   );
@@ -39,24 +37,30 @@ class _DeliveryPageState extends State<DeliveryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final primary = Colors.deepOrange;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F8F8),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          "Checkout",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          "Delivery Details",
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+          ),
         ),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(
-              isEditing ? Icons.check : Icons.edit,
-              color: Colors.black,
+              isEditing ? Icons.check_circle : Icons.edit,
+              color: primary,
             ),
             onPressed: () {
               setState(() {
@@ -66,154 +70,347 @@ class _DeliveryPageState extends State<DeliveryPage> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Address details",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            Container(
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  isEditing
-                      ? TextField(
-                          controller: nameController,
-                          decoration: const InputDecoration(
-                            labelText: "Name",
-                            border: OutlineInputBorder(),
-                          ),
-                        )
-                      : Text(
-                          nameController.text,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                  // Address Section
+                  Row(
+                    children: [
+                      Icon(Icons.location_on, color: primary, size: 24),
+                      const SizedBox(width: 8),
+                      const Text(
+                        "Delivery Address",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
                         ),
-                  const SizedBox(height: 8),
-                  isEditing
-                      ? TextField(
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 8,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildAddressField(
+                          icon: Icons.person,
+                          label: "Name",
+                          controller: nameController,
+                          isEditing: isEditing,
+                        ),
+                        const Divider(height: 24),
+                        _buildAddressField(
+                          icon: Icons.home,
+                          label: "Address",
                           controller: addressController,
+                          isEditing: isEditing,
                           maxLines: 3,
-                          decoration: const InputDecoration(
-                            labelText: "Address",
-                            border: OutlineInputBorder(),
-                          ),
-                        )
-                      : Text(addressController.text),
-                  const SizedBox(height: 8),
-                  isEditing
-                      ? TextField(
+                        ),
+                        const Divider(height: 24),
+                        _buildAddressField(
+                          icon: Icons.phone,
+                          label: "Phone",
                           controller: phoneController,
+                          isEditing: isEditing,
                           keyboardType: TextInputType.phone,
-                          decoration: InputDecoration(
-                            labelText: "Phone number",
-                            border: const OutlineInputBorder(),
-                            errorText: _validatePhone(phoneController.text),
-                          ),
-                          onChanged: (_) {
-                            setState(() {});
-                          },
-                        )
-                      : Text(phoneController.text),
+                          errorText: isEditing
+                              ? _validatePhone(phoneController.text)
+                              : null,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Delivery Method Section
+                  Row(
+                    children: [
+                      Icon(Icons.local_shipping, color: primary, size: 24),
+                      const SizedBox(width: 8),
+                      const Text(
+                        "Delivery Method",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 8,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        _buildDeliveryOption(
+                          icon: Icons.delivery_dining,
+                          title: "Door Delivery",
+                          subtitle: "Delivered to your doorstep",
+                          value: "Door delivery",
+                          primary: primary,
+                        ),
+                        const Divider(height: 1),
+                        _buildDeliveryOption(
+                          icon: Icons.store,
+                          title: "Pick Up",
+                          subtitle: "Collect from restaurant",
+                          value: "Pick up",
+                          primary: primary,
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
-            const Text(
-              "Delivery method",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                children: [
-                  RadioListTile<String>(
-                    value: "Door delivery",
-                    groupValue: deliveryMethod,
-                    title: const Text("Door delivery"),
-                    onChanged: (value) =>
-                        setState(() => deliveryMethod = value!),
-                  ),
-                  RadioListTile<String>(
-                    value: "Pick up",
-                    groupValue: deliveryMethod,
-                    title: const Text("Pick up"),
-                    onChanged: (value) =>
-                        setState(() => deliveryMethod = value!),
-                  ),
-                ],
-              ),
-            ),
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Total",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-                Text(
-                  '₹ ${widget.totalAmount.toStringAsFixed(0)}',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+          ),
+
+          // Bottom Section
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  offset: Offset(0, -4),
+                  blurRadius: 10,
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepOrange,
-                minimumSize: const Size(double.infinity, 55),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () {
-                final phoneError = _validatePhone(phoneController.text);
-                if (nameController.text.isEmpty ||
-                    addressController.text.isEmpty ||
-                    phoneController.text.isEmpty ||
-                    phoneError != null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        phoneError ?? "Please fill in all address details",
+            child: SafeArea(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Total Amount:",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      Text(
+                        '₹${widget.totalAmount.toStringAsFixed(2)}',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          color: primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primary,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(28),
+                        ),
+                        elevation: 0,
+                      ),
+                      onPressed: () {
+                        final phoneError = _validatePhone(phoneController.text);
+                        if (nameController.text.isEmpty ||
+                            addressController.text.isEmpty ||
+                            phoneController.text.isEmpty ||
+                            phoneError != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                phoneError ?? "Please fill in all address details",
+                              ),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          return;
+                        }
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PaymentPage(
+                              total: widget.totalAmount,
+                              deliveryMethod: deliveryMethod,
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "Proceed to Payment",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                  );
-                  return;
-                }
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        PaymentPage(total: widget.totalAmount),
                   ),
-                );
-              },
-              child: const Text(
-                "Proceed to payment",
-                style: TextStyle(fontSize: 16, color: Colors.white),
+                ],
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAddressField({
+    required IconData icon,
+    required String label,
+    required TextEditingController controller,
+    required bool isEditing,
+    int maxLines = 1,
+    TextInputType? keyboardType,
+    String? errorText,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, color: Colors.grey.shade600, size: 20),
+        const SizedBox(width: 12),
+        Expanded(
+          child: isEditing
+              ? TextField(
+                  controller: controller,
+                  maxLines: maxLines,
+                  keyboardType: keyboardType,
+                  decoration: InputDecoration(
+                    labelText: label,
+                    errorText: errorText,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Colors.deepOrange,
+                        width: 2,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 12,
+                    ),
+                  ),
+                  onChanged: (_) => setState(() {}),
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      controller.text,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDeliveryOption({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required String value,
+    required Color primary,
+  }) {
+    final isSelected = deliveryMethod == value;
+    return InkWell(
+      onTap: () => setState(() => deliveryMethod = value),
+      borderRadius: BorderRadius.circular(16),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? primary.withOpacity(0.1)
+                    : Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                icon,
+                color: isSelected ? primary : Colors.grey.shade600,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: isSelected ? primary : Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Radio<String>(
+              value: value,
+              groupValue: deliveryMethod,
+              onChanged: (val) => setState(() => deliveryMethod = val!),
+              activeColor: primary,
             ),
           ],
         ),
