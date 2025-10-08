@@ -24,8 +24,8 @@ class TableReservationScreen extends StatefulWidget {
 class _TableReservationScreenState extends State<TableReservationScreen> {
   final BookingManager _bookingManager = BookingManager();
   DateTime _selectedDate = DateTime.now();
-  int? _selectedTable; // 1..10
-  String? _selectedTime; // e.g. '9:30 pm'
+  int? _selectedTable;
+  String? _selectedTime;
 
   final List<String> _timeSlots = const [
     '8 am',

@@ -413,10 +413,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(5, (index) {
                     return IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
                       icon: Icon(
                         index < rating ? Icons.star : Icons.star_border,
                         color: Colors.amber,
-                        size: 36,
+                        size: 32,
                       ),
                       onPressed: () {
                         setDialogState(() {
@@ -701,20 +703,24 @@ class _ProfilePageState extends State<ProfilePage> {
         setState(() {
           _profileImage = File(pickedFile.path);
         });
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Profile photo updated successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Profile photo updated successfully!'),
-            backgroundColor: Colors.green,
+          SnackBar(
+            content: Text('Error picking image: $e'),
+            backgroundColor: Colors.red,
           ),
         );
       }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error picking image: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
     }
   }
 

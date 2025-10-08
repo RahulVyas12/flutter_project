@@ -30,6 +30,26 @@ class ForgotPasswordScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              const SizedBox(height: 40),
+              // Forgot Password Icon
+              const Center(
+                child: Icon(
+                  Icons.lock_reset,
+                  size: 80,
+                  color: Colors.deepOrange,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                "Forgot Password",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepOrange,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
               const Text(
                 "Enter your registered email to receive an OTP",
                 style: TextStyle(fontSize: 16),
@@ -39,6 +59,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 controller: emailController,
                 decoration: InputDecoration(
                   labelText: "Email",
+                  prefixIcon: const Icon(Icons.email),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -99,6 +120,26 @@ class OtpScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              const SizedBox(height: 40),
+              // OTP Icon
+              const Center(
+                child: Icon(
+                  Icons.verified_user,
+                  size: 80,
+                  color: Colors.deepOrange,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                "Verify OTP",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepOrange,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
               const Text("Enter the OTP sent to your email"),
               const SizedBox(height: 20),
               TextFormField(
@@ -107,6 +148,7 @@ class OtpScreen extends StatelessWidget {
                 maxLength: 6,
                 decoration: InputDecoration(
                   labelText: "OTP",
+                  prefixIcon: const Icon(Icons.security),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -161,75 +203,99 @@ class ResetPasswordScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text("Reset Password")),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text("Set your new password"),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: newPasswordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: "New Password",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 40),
+                // Reset Password Icon
+                const Center(
+                  child: Icon(
+                    Icons.lock_open,
+                    size: 80,
+                    color: Colors.deepOrange,
                   ),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter new password';
-                  }
-                  if (value.length < 6) {
-                    return 'Password must be at least 6 characters';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: confirmPasswordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: "Confirm Password",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please confirm your password';
-                  }
-                  if (value != newPasswordController.text) {
-                    return 'Passwords do not match';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepOrange,
-                ),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Password reset successfully!"),
-                      ),
-                    );
-                    Navigator.popUntil(context, (route) => route.isFirst);
-                  }
-                },
-                child: const Text(
+                const SizedBox(height: 20),
+                const Text(
                   "Reset Password",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.deepOrange,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+                const Text("Set your new password"),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: newPasswordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: "New Password",
+                    prefixIcon: const Icon(Icons.lock),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter new password';
+                    }
+                    if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: confirmPasswordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: "Confirm Password",
+                    prefixIcon: const Icon(Icons.lock_outline),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please confirm your password';
+                    }
+                    if (value != newPasswordController.text) {
+                      return 'Passwords do not match';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepOrange,
+                  ),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Password reset successfully!"),
+                        ),
+                      );
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                    }
+                  },
+                  child: const Text(
+                    "Reset Password",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

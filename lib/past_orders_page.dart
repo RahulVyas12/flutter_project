@@ -63,10 +63,7 @@ class _PastOrdersPageState extends State<PastOrdersPage> {
         ),
         title: const Text(
           'Past Orders',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -104,10 +101,7 @@ class _PastOrdersPageState extends State<PastOrdersPage> {
           const SizedBox(height: 8),
           Text(
             'Your food orders will appear here',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade500,
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
           ),
         ],
       ),
@@ -116,7 +110,8 @@ class _PastOrdersPageState extends State<PastOrdersPage> {
 
   Widget _buildOrderCard(OrderModel order) {
     final isDelivered = order.status == 'Delivered';
-    final canCancel = order.status == 'In Progress' || order.status == 'Pending';
+    final canCancel =
+        order.status == 'In Progress' || order.status == 'Pending';
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -124,11 +119,7 @@ class _PastOrdersPageState extends State<PastOrdersPage> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 8,
-            offset: Offset(0, 2),
-          ),
+          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 2)),
         ],
       ),
       child: Column(
@@ -196,37 +187,36 @@ class _PastOrdersPageState extends State<PastOrdersPage> {
               children: [
                 const Text(
                   'Items:',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 8),
-                ...order.items.map((item) => Padding(
-                      padding: const EdgeInsets.only(bottom: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              '${item['quantity']}x ${item['name']}',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            '₹${item['price']}',
+                ...order.items.map(
+                  (item) => Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            '${item['quantity']}x ${item['name']}',
                             style: TextStyle(
                               fontSize: 13,
-                              fontWeight: FontWeight.w600,
                               color: Colors.grey.shade700,
                             ),
                           ),
-                        ],
-                      ),
-                    )),
+                        ),
+                        Text(
+                          '₹${item['price']}',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 const Divider(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -333,7 +323,10 @@ class _PastOrdersPageState extends State<PastOrdersPage> {
                       Expanded(
                         child: OutlinedButton.icon(
                           style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: Colors.red.shade400, width: 2),
+                            side: BorderSide(
+                              color: Colors.red.shade400,
+                              width: 2,
+                            ),
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -390,7 +383,7 @@ class _PastOrdersPageState extends State<PastOrdersPage> {
       'Sep',
       'Oct',
       'Nov',
-      'Dec'
+      'Dec',
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}, ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
   }
@@ -425,10 +418,7 @@ class _PastOrdersPageState extends State<PastOrdersPage> {
               children: [
                 const Text(
                   'How was your food?',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 12),
                 // Star Rating
@@ -439,7 +429,7 @@ class _PastOrdersPageState extends State<PastOrdersPage> {
                       icon: Icon(
                         index < tempRating ? Icons.star : Icons.star_border,
                         color: Colors.amber,
-                        size: 40,
+                        size: 32,
                       ),
                       onPressed: () {
                         setDialogState(() {
@@ -482,10 +472,7 @@ class _PastOrdersPageState extends State<PastOrdersPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text(
-                'Cancel',
-                style: TextStyle(color: Colors.grey),
-              ),
+              child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -524,9 +511,7 @@ class _PastOrdersPageState extends State<PastOrdersPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text(
           'Cancel Order',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),

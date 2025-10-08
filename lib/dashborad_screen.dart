@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:restrospt/CartPage.dart';
 import 'package:restrospt/DeliveryPage.dart';
 import 'package:restrospt/WishlistPage.dart';
-import 'package:restrospt/food_item.dart'; // Add this import at the top
+import 'package:restrospt/food_item.dart';
 import 'package:restrospt/foodmenu.dart';
 import 'package:restrospt/my_bookings.dart';
 import 'package:restrospt/profile_page.dart';
@@ -19,7 +19,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final TextEditingController _searchController = TextEditingController();
   String searchQuery = '';
 
-  // Filter variables
   String selectedCategory = 'All';
   String selectedPriceRange = 'All';
   double minRating = 0.0;
@@ -118,7 +117,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (selectedPriceRange != 'All') {
       items = items.where((item) {
         final priceStr = item['price'] ?? '0';
-        // Remove ₹ symbol and any other non-numeric characters
         final cleanPrice = priceStr.replaceAll(RegExp(r'[^0-9.]'), '');
         final price = double.tryParse(cleanPrice) ?? 0;
         switch (selectedPriceRange) {
@@ -418,20 +416,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 SizedBox(height: 4),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.location_on_outlined,
-                      color: Colors.white70,
-                      size: 14,
-                    ),
-                    SizedBox(width: 4),
-                    Text(
-                      'Amreli',
-                      style: TextStyle(color: Colors.white70, fontSize: 12),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),

@@ -101,6 +101,7 @@ class _SignupPageState extends State<SignupPage> {
                   controller: nameController,
                   decoration: InputDecoration(
                     labelText: "Name",
+                    prefixIcon: const Icon(Icons.person),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -116,6 +117,7 @@ class _SignupPageState extends State<SignupPage> {
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                     labelText: "Phone Number",
+                    prefixIcon: const Icon(Icons.phone),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -131,6 +133,7 @@ class _SignupPageState extends State<SignupPage> {
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: "Email Address",
+                    prefixIcon: const Icon(Icons.email),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -146,6 +149,7 @@ class _SignupPageState extends State<SignupPage> {
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: "Password",
+                    prefixIcon: const Icon(Icons.lock),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),

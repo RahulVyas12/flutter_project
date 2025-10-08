@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'booking_manager.dart';
 
 class MyBookingsScreen extends StatefulWidget {
@@ -35,10 +36,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
               children: [
                 const Text(
                   'How was your experience?',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black87,
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.black87),
                 ),
                 const SizedBox(height: 16),
                 // Star rating
@@ -49,7 +47,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                       icon: Icon(
                         index < tempRating ? Icons.star : Icons.star_border,
                         color: Colors.amber,
-                        size: 36,
+                        size: 32,
                       ),
                       onPressed: () {
                         setDialogState(() {
@@ -95,10 +93,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text(
-                'Cancel',
-                style: TextStyle(color: Colors.grey),
-              ),
+              child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -140,7 +135,9 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Cancel Booking'),
-        content: const Text('Are you sure you want to cancel this reservation?'),
+        content: const Text(
+          'Are you sure you want to cancel this reservation?',
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         actions: [
           TextButton(
@@ -191,10 +188,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
         ),
         title: const Text(
           'My Bookings',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -216,11 +210,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.event_busy,
-            size: 80,
-            color: Colors.grey.shade300,
-          ),
+          Icon(Icons.event_busy, size: 80, color: Colors.grey.shade300),
           const SizedBox(height: 16),
           Text(
             'No Bookings Yet',
@@ -233,10 +223,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
           const SizedBox(height: 8),
           Text(
             'Your table reservations will appear here',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade500,
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
           ),
         ],
       ),
@@ -246,7 +233,11 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
   Widget _buildBookingCard(BookingModel booking, Color primary) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final bookingDate = DateTime(booking.date.year, booking.date.month, booking.date.day);
+    final bookingDate = DateTime(
+      booking.date.year,
+      booking.date.month,
+      booking.date.day,
+    );
     final isPast = bookingDate.isBefore(today);
 
     return Container(
@@ -255,11 +246,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 8,
-            offset: Offset(0, 2),
-          ),
+          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 2)),
         ],
       ),
       child: Column(
@@ -329,10 +316,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                       children: [
                         const Text(
                           'Review : ',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey,
-                          ),
+                          style: TextStyle(fontSize: 13, color: Colors.grey),
                         ),
                         Text(
                           booking.rating.toStringAsFixed(1),
@@ -350,10 +334,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                 const SizedBox(height: 8),
                 Text(
                   'Open : ${booking.hours}',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
                 const SizedBox(height: 12),
                 const Divider(),
@@ -374,11 +355,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                       primary,
                     ),
                     const SizedBox(width: 12),
-                    _detailChip(
-                      Icons.access_time,
-                      booking.time,
-                      primary,
-                    ),
+                    _detailChip(Icons.access_time, booking.time, primary),
                   ],
                 ),
                 const SizedBox(height: 16),

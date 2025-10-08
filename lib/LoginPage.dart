@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:restrospt/Forgotpassword.dart';
-import 'package:restrospt/dashborad_screen.dart';
 import 'package:restrospt/admin/admin_login.dart';
+import 'package:restrospt/dashborad_screen.dart';
 
 import 'SignupPage.dart';
 
@@ -15,6 +15,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -81,6 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                   controller: emailController,
                   decoration: InputDecoration(
                     labelText: "Email Address",
+                    prefixIcon: const Icon(Icons.email),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -93,9 +95,20 @@ class _LoginPageState extends State<LoginPage> {
                 // Password Field
                 TextFormField(
                   controller: passwordController,
-                  obscureText: true,
+                  obscureText: !_isPasswordVisible,
                   decoration: InputDecoration(
                     labelText: "Password",
+                    prefixIcon: const Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),

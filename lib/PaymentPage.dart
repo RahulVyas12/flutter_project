@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restrospt/food_item.dart';
 
 class PaymentPage extends StatefulWidget {
   final double total;
@@ -56,19 +57,13 @@ class _PaymentPageState extends State<PaymentPage> {
             const SizedBox(height: 20),
             const Text(
               "Order Placed Successfully!",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
             Text(
               "Thank you for your order!\nYour food will be ${widget.deliveryMethod == 'Pick up' ? 'ready for pickup' : 'delivered'} soon.",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade600,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
@@ -83,6 +78,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   ),
                 ),
                 onPressed: () {
+                  cartItems.clear();
                   Navigator.popUntil(context, (route) => route.isFirst);
                 },
                 child: const Text(
@@ -116,10 +112,7 @@ class _PaymentPageState extends State<PaymentPage> {
         ),
         title: const Text(
           "Payment",
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -367,8 +360,9 @@ class _PaymentPageState extends State<PaymentPage> {
                   borderSide: BorderSide(color: primary, width: 2),
                 ),
               ),
-              validator: (value) =>
-                  value == null || value.isEmpty ? "Enter cardholder name" : null,
+              validator: (value) => value == null || value.isEmpty
+                  ? "Enter cardholder name"
+                  : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
