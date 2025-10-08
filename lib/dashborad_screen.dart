@@ -5,6 +5,7 @@ import 'package:restrospt/WishlistPage.dart';
 import 'package:restrospt/food_item.dart'; // Add this import at the top
 import 'package:restrospt/foodmenu.dart';
 import 'package:restrospt/my_bookings.dart';
+import 'package:restrospt/profile_page.dart';
 import 'package:restrospt/restaurants.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -390,10 +391,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
       color: primary,
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 26,
-            backgroundColor: Colors.white,
-            child: Icon(Icons.person, color: primary, size: 32),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ProfilePage()),
+              );
+            },
+            child: CircleAvatar(
+              radius: 26,
+              backgroundColor: Colors.white,
+              child: Icon(Icons.person, color: primary, size: 32),
+            ),
           ),
           SizedBox(width: 12),
           Expanded(
