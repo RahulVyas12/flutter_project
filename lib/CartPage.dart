@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restrospt/DeliveryPage.dart';
 import 'package:restrospt/food_item.dart';
 
 class CartPage extends StatefulWidget {
@@ -184,6 +185,13 @@ class _CartPageState extends State<CartPage> {
                           ),
                         ),
                         onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  DeliveryPage(totalAmount: getTotalPrice()),
+                            ),
+                          );
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Proceeding to checkout...'),

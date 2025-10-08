@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restrospt/CartPage.dart';
+import 'package:restrospt/DeliveryPage.dart';
 import 'package:restrospt/WishlistPage.dart';
 import 'package:restrospt/food_item.dart'; // Add this import at the top
 import 'package:restrospt/foodmenu.dart';
@@ -32,6 +33,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       'price': '220',
     },
   ];
+
+  double getTotalPrice() {
+    double total = 0.0;
+    for (var item in cartItems) {
+      final price = double.tryParse(item['price'].toString()) ?? 0.0;
+      final quantity = int.tryParse(item['quantity'].toString()) ?? 1;
+      total += price * quantity;
+    }
+    return total;
+  }
 
   List<Map<String, String>> get filteredItems {
     if (searchQuery.isEmpty) return foodItems;
@@ -447,7 +458,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               elevation: 0,
                             ),
                             onPressed: () {
-                              // You can implement order functionality here
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DeliveryPage(
+                                    totalAmount:
+                                        double.tryParse(
+                                          item['price']!.replaceAll(
+                                            RegExp(r'[^0-9.]'),
+                                            '',
+                                          ),
+                                        ) ??
+                                        0,
+                                  ),
+                                ),
+                              );
                             },
                             child: Text(
                               'Order',

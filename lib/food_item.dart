@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restrospt/CartPage.dart';
+import 'package:restrospt/DeliveryPage.dart';
 import 'package:restrospt/WishlistPage.dart';
 
 List<Map<String, dynamic>> cartItems = [];
@@ -213,7 +214,20 @@ class FoodDetailPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DeliveryPage(
+                            totalAmount:
+                                double.tryParse(
+                                  price.replaceAll(RegExp(r'[^0-9.]'), ''),
+                                ) ??
+                                0,
+                          ),
+                        ),
+                      );
+                    },
                     child: const Text(
                       "Place Order",
                       style: TextStyle(fontSize: 16, color: Colors.white),
