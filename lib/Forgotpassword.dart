@@ -1,18 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MaterialApp(home: ForgotPasswordFlow()));
-}
-
-class ForgotPasswordFlow extends StatelessWidget {
-  const ForgotPasswordFlow({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const ForgotPasswordScreen();
-  }
-}
-
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});
 
@@ -121,7 +108,6 @@ class OtpScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 40),
-              // OTP Icon
               const Center(
                 child: Icon(
                   Icons.verified_user,
@@ -212,7 +198,6 @@ class ResetPasswordScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 40),
-                // Reset Password Icon
                 const Center(
                   child: Icon(
                     Icons.lock_open,

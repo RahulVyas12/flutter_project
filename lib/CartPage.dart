@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:restrospt/DeliveryPage.dart';
 import 'package:restrospt/food_item.dart';
+import 'package:restrospt/WishlistPage.dart';
+import 'package:restrospt/my_bookings.dart';
+import 'package:restrospt/dashborad_screen.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -38,10 +41,7 @@ class _CartPageState extends State<CartPage> {
         ),
         title: const Text(
           'Your Cart',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         actions: [
@@ -170,6 +170,7 @@ class _CartPageState extends State<CartPage> {
                 ),
               ],
             ),
+      bottomNavigationBar: _buildBottomNav(context, primary),
     );
   }
 
@@ -195,10 +196,7 @@ class _CartPageState extends State<CartPage> {
           const SizedBox(height: 8),
           Text(
             'Add delicious items to get started',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade500,
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
           ),
         ],
       ),
@@ -206,9 +204,8 @@ class _CartPageState extends State<CartPage> {
   }
 
   Widget _buildCartCard(Map<String, dynamic> item, int index, Color primary) {
-    final itemPrice = double.tryParse(
-          item['price'].toString().replaceAll('₹', '').trim(),
-        ) ??
+    final itemPrice =
+        double.tryParse(item['price'].toString().replaceAll('₹', '').trim()) ??
         0;
     final quantity = item['quantity'] ?? 1;
     final totalItemPrice = itemPrice * quantity;
@@ -219,11 +216,7 @@ class _CartPageState extends State<CartPage> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 8,
-            offset: Offset(0, 2),
-          ),
+          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 2)),
         ],
       ),
       child: Padding(
@@ -275,7 +268,9 @@ class _CartPageState extends State<CartPage> {
                           });
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('${item['name']} removed from cart'),
+                              content: Text(
+                                '${item['name']} removed from cart',
+                              ),
                               backgroundColor: Colors.green,
                             ),
                           );
@@ -286,10 +281,7 @@ class _CartPageState extends State<CartPage> {
                   const SizedBox(height: 4),
                   Text(
                     '₹${itemPrice.toStringAsFixed(2)} each',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey.shade600,
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
                   ),
                   const SizedBox(height: 12),
 
@@ -324,7 +316,9 @@ class _CartPageState extends State<CartPage> {
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                              ),
                               child: Text(
                                 '$quantity',
                                 style: TextStyle(
@@ -371,6 +365,71 @@ class _CartPageState extends State<CartPage> {
           ],
         ),
       ),
+    );
+  }
+
+  // Bottom Navigation
+  Widget _buildBottomNav(BuildContext context, Color primary) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6)],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => DashboardScreen()),
+              );
+            },
+            child: _navItem(Icons.home, primary, false),
+          ),
+          GestureDetector(
+            onTap: () {},
+            child: _navItem(Icons.shopping_cart, primary, true),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const WishlistPage()),
+              );
+            },
+            child: _navItem(Icons.favorite, primary, false),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const MyBookingsScreen()),
+              );
+            },
+            child: _navItem(Icons.restaurant_menu, primary, false),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _navItem(IconData icon, Color primary, bool active) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          height: 48,
+          width: 48,
+          decoration: BoxDecoration(
+            color: active ? primary : Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6)],
+          ),
+          child: Icon(icon, color: active ? Colors.white : primary),
+        ),
+      ],
     );
   }
 }

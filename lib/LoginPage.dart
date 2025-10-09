@@ -101,7 +101,9 @@ class _LoginPageState extends State<LoginPage> {
                     prefixIcon: const Icon(Icons.lock),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                       ),
                       onPressed: () {
                         setState(() {
@@ -116,13 +118,13 @@ class _LoginPageState extends State<LoginPage> {
                   validator: _validatePassword,
                 ),
 
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
 
                 // Forgot Password
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    onPressed: () {
+                  child: GestureDetector(
+                    onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -137,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
 
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
 
                 // Signup option
                 Row(

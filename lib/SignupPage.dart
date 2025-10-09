@@ -69,7 +69,6 @@ class _SignupPageState extends State<SignupPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Logo + Title
                 Center(
                   child: Column(
                     children: [
@@ -88,7 +87,6 @@ class _SignupPageState extends State<SignupPage> {
 
                 const SizedBox(height: 30),
 
-                // Signup title
                 const Text(
                   "Sign-up",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),

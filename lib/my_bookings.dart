@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'booking_manager.dart';
+import 'package:restrospt/CartPage.dart';
+import 'package:restrospt/WishlistPage.dart';
+import 'package:restrospt/dashborad_screen.dart';
 
 class MyBookingsScreen extends StatefulWidget {
   const MyBookingsScreen({super.key});
@@ -202,6 +205,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                 return _buildBookingCard(booking, primary);
               },
             ),
+      bottomNavigationBar: _buildBottomNav(context, primary),
     );
   }
 
@@ -481,6 +485,71 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
     final m = months[date.month - 1];
     final y = date.year.toString();
     return '$d/$m/$y';
+  }
+
+  // Bottom Navigation
+  Widget _buildBottomNav(BuildContext context, Color primary) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6)],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => DashboardScreen()),
+              );
+            },
+            child: _navItem(Icons.home, primary, false),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CartPage()),
+              );
+            },
+            child: _navItem(Icons.shopping_cart, primary, false),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const WishlistPage()),
+              );
+            },
+            child: _navItem(Icons.favorite, primary, false),
+          ),
+          GestureDetector(
+            onTap: () {},
+            child: _navItem(Icons.restaurant_menu, primary, true),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _navItem(IconData icon, Color primary, bool active) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          height: 48,
+          width: 48,
+          decoration: BoxDecoration(
+            color: active ? primary : Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6)],
+          ),
+          child: Icon(icon, color: active ? Colors.white : primary),
+        ),
+      ],
+    );
   }
 }
 
